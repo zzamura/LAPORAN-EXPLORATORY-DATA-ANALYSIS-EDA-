@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentasi EDA Biometrik Ikan - Kelompok 7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0f172a;
+            --accent-gold: #c5a059;
+            --text-main: #f8fafc;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border-soft: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .container-custom {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1, h2, h3, .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        .accent-line {
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-gold), transparent);
+            width: 80px;
+            margin: 1.5rem 0;
+        }
+
+        .image-upload-wrapper {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .image-placeholder {
+            background: #1e293b;
+            border: 2px dashed #475569;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .image-placeholder:hover {
+            border-color: var(--accent-gold);
+            background: #1e293b88;
+        }
+
+        .image-placeholder img {
+            width: 100%;
+            height: auto;
+            display: none;
+            object-fit: contain;
+        }
+
+        .placeholder-text {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .insight-note {
+            background: rgba(197, 160, 89, 0.1);
+            border-left: 4px solid var(--accent-gold);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            color: #cbd5e1;
+        }
+
+        .code-block {
+            background: #000;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: #a7f3d0;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .tag-pill {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 0.4rem 1.2rem;
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            display: inline-block;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-custom">
+    <!-- COVER -->
+    <header class="py-20 text-center">
+        <span class="tag-pill">Exploratory Data Analysis (EDA)</span>
+        <h1 class="text-6xl mb-6 font-serif font-bold">Analisis Biometrik Ikan</h1>
+        <p class="text-xl text-slate-400 italic mb-8">Laporan Presentasi Kelompok 7</p>
+        <div class="accent-line mx-auto"></div>
+        <div class="mt-8 flex flex-wrap justify-center gap-4 text-xs font-semibold text-slate-500">
+            <span>Zaki Muhammad Razan</span> • <span>Mohamad Faiz Riza</span> • <span>Angga Dwi Cahyo</span> • <span>Reidha Luthfi Zakaria</span>
+        </div>
+    </header>
+
+    <!-- STEP 1: LIBRARY -->
+    <section class="section-card">
+        <h2 class="text-3xl mb-4 font-serif">1. Pengaturan Global & Library</h2>
+        <div class="accent-line"></div>
+        <div class="code-block">
+            import pandas as pd<br>
+            import numpy as np<br>
+            import matplotlib.pyplot as plt<br>
+            import seaborn as sns<br><br>
+            # Pengaturan Global Visualisasi<br>
+            sns.set_theme(style="whitegrid")<br>
+            plt.rcParams['figure.figsize'] = (12, 8)<br>
+            plt.rcParams['axes.titlesize'] = 15<br><br>
+            print("✅ Library berhasil diimpor!")
+        </div>
+        <p class="text-slate-300">
+            Pada tahap ini, kita mengaktifkan Seaborn dengan tema <i>whitegrid</i> agar grafik memiliki garis bantu yang lembut. Ini memudahkan mata kita untuk membaca nilai pada sumbu Y tanpa terlihat berantakan.
+        </p>
+    </section>
+
+    <!-- STEP 2: DATA CLEANING -->
+    <section class="section-card">
+        <h2 class="text-3xl mb-4 font-serif">2. Memuat & Membersihkan Data</h2>
+        <div class="accent-line"></div>
+        <div class="code-block">
+            # Pastikan file Fish.csv sudah di-upload ke folder /content/<br>
+            try:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;df = pd.read_csv('/content/Fish.csv')<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;print("✅ Dataset berhasil dimuat!")<br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;# Cek nilai nol pada Weight<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;zero_weight = df[df['Weight'] <= 0]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;if not zero_weight.empty:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"⚠️ Menghapus {len(zero_weight)} data dengan berat <= 0.")<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;df = df[df['Weight'] > 0]
+        </div>
+        <p class="text-slate-300">
+            Sebelum dianalisis, data harus dipastikan bersih. Kita memeriksa integritas data. Kita menghapus data dengan berat (Weight) $\leq 0$ karena secara biologis tidak mungkin seekor ikan memiliki berat nol atau negatif. Hal ini dilakukan agar statistik rata-rata tidak terdistorsi.
+        </p>
+    </section>
+
+    <!-- STEP 3: HISTOGRAM -->
+    <section class="section-card">
+        <h2 class="text-3xl mb-4 font-serif">3. Penyebaran Fitur Fisik</h2>
+        <div class="accent-line"></div>
+        <div class="image-upload-wrapper">
+            <input type="file" accept="image/*" onchange="previewImage(event, 'img-3')">
+            <div class="image-placeholder" onclick="this.previousElementSibling.click()">
+                <div class="placeholder-text">Klik untuk Unggah Grafik Histogram</div>
+                <img id="img-3" alt="">
+            </div>
+        </div>
+        <div class="insight-note">
+            Grafik histogram menunjukkan sebaran nilai pada setiap fitur fisik. Kita dapat melihat apakah data cenderung berkumpul di nilai kecil atau besar (skewness). Contohnya, jika grafik Weight menumpuk di sisi kiri, artinya dataset didominasi oleh ikan-ikan berukuran kecil.
+        </div>
+    </section>
+
+    <!-- STEP 4: COUNTPLOT -->
+    <section class="section-card">
+        <h2 class="text-3xl mb-4 font-serif">4. Komposisi Spesies</h2>
+        <div class="accent-line"></div>
+        <div class="image-upload-wrapper">
+            <input type="file" accept="image/*" onchange="previewImage(event, 'img-4')">
+            <div class="image-placeholder" onclick="this.previousElementSibling.click()">
+                <div class="placeholder-text">Klik untuk Unggah Grafik Count Plot</div>
+                <img id="img-4" alt="">
+            </div>
+        </div>
+        <div class="insight-note">
+            Visualisasi ini menunjukkan komposisi sampel ikan. Kita bisa melihat spesies mana yang paling dominan (seperti Perch) dan mana yang paling sedikit (seperti Whitefish). Ketidakseimbangan jumlah data antar spesies penting untuk diketahui jika kita ingin membuat model prediksi di masa depan.
+        </div>
+    </section>
+
+    <!-- STEP 5: HEATMAP -->
+    <section class="section-card">
+        <h2 class="text-3xl mb-4 font-serif">5. Matriks Korelasi Full</h2>
+        <div class="accent-line"></div>
+        <div class="image-upload-wrapper">
+            <input type="file" accept="image/*" onchange="previewImage(event, 'img-5')">
+            <div class="image-placeholder" onclick="this.previousElementSibling.click()">
+                <div class="placeholder-text">Klik untuk Unggah Grafik Heatmap</div>
+                <img id="img-5" alt="">
+            </div>
+        </div>
+        <div class="insight-note">
+            Heatmap memberikan gambaran hubungan linier antar variabel. Angka yang mendekati 1.00 menunjukkan korelasi positif yang sangat kuat. Terlihat bahwa fitur Length, Height, dan Width memiliki korelasi yang sangat tinggi terhadap Weight, yang berarti dimensi fisik ini adalah penentu utama berat ikan.
+        </div>
+    </section>
+
+    <!-- STEP 6: SCATTER WEIGHT vs LENGTH -->
+    <section class="section-card">
+        <h2 class="text-3xl mb-4 font-serif">6. Hubungan Berat vs Panjang</h2>
+        <div class="accent-line"></div>
+        <div class="image-upload-wrapper">
+            <input type="file" accept="image/*" onchange="previewImage(event, 'img-6')">
+            <div class="image-placeholder" onclick="this.previousElementSibling.click()">
+                <div class="placeholder-text">Klik untuk Unggah Grafik Scatter Weight vs Length</div>
+                <img id="img-6" alt="">
+            </div>
+        </div>
+        <div class="insight-note">
+            Scatter plot ini mengungkapkan pola pertumbuhan. Hubungan antara panjang dan berat biasanya tidak linier sempurna melainkan sedikit melengkung (eksponensial). Setiap warna mewakili spesies yang berbeda, menunjukkan bahwa pada panjang yang sama, spesies tertentu mungkin memiliki berat yang berbeda karena struktur tubuh yang berbeda.
+        </div>
+    </section>
+
+    <!-- STEP 7: BOXPLOT -->
+    <section class="section-card">
+        <h2 class="text-3xl mb-4 font-serif">7. Variasi Berat per Spesies</h2>
+        <div class="accent-line"></div>
+        <div class="image-upload-wrapper">
+            <input type="file" accept="image/*" onchange="previewImage(event, 'img-7')">
+            <div class="image-placeholder" onclick="this.previousElementSibling.click()">
+                <div class="placeholder-text">Klik untuk Unggah Grafik Box Plot</div>
+                <img id="img-7" alt="">
+            </div>
+        </div>
+        <div class="insight-note">
+            Box plot digunakan untuk membandingkan rentang berat antar spesies secara statistik. Garis di tengah kotak adalah median. Kita bisa melihat spesies mana yang paling "berat" secara umum (seperti Pike) dan mendeteksi adanya titik-titik pencilan (outliers) yang menandakan adanya ikan yang ukurannya jauh di atas rata-rata spesiesnya.
+        </div>
+    </section>
+
+    <!-- STEP 8: VIOLIN PLOT -->
+    <section class="section-card">
+        <h2 class="text-3xl mb-4 font-serif">8. Distribusi Tinggi (Height)</h2>
+        <div class="accent-line"></div>
+        <div class="image-upload-wrapper">
+            <input type="file" accept="image/*" onchange="previewImage(event, 'img-8')">
+            <div class="image-placeholder" onclick="this.previousElementSibling.click()">
+                <div class="placeholder-text">Klik untuk Unggah Grafik Violin Plot</div>
+                <img id="img-8" alt="">
+            </div>
+        </div>
+        <div class="insight-note">
+            Violin plot menggabungkan keunggulan box plot dengan distribusi kepadatan. Bagian yang paling lebar menunjukkan di mana nilai tinggi badan (Height) paling banyak terkonsentrasi. Ini membantu kita melihat karakteristik fisik unik, misalnya spesies Bream yang cenderung memiliki tubuh yang sangat tinggi dibandingkan spesies lainnya.
+        </div>
+    </section>
+
+    <!-- STEP 9: HEIGHT vs WIDTH -->
+    <section class="section-card">
+        <h2 class="text-3xl mb-4 font-serif">9. Perbandingan Tinggi vs Lebar</h2>
+        <div class="accent-line"></div>
+        <div class="image-upload-wrapper">
+            <input type="file" accept="image/*" onchange="previewImage(event, 'img-9')">
+            <div class="image-placeholder" onclick="this.previousElementSibling.click()">
+                <div class="placeholder-text">Klik untuk Unggah Grafik Scatter Height vs Width</div>
+                <img id="img-9" alt="">
+            </div>
+        </div>
+        <div class="insight-note">
+            Grafik ini membedah proporsi bentuk tubuh ikan. Dengan membandingkan Height (Tinggi) dan Width (Lebar), kita bisa mengidentifikasi bentuk tubuh spesies. Ikan yang berada di bagian kanan atas grafik adalah ikan yang bertubuh besar dan tebal, sementara yang di kiri bawah adalah ikan yang kecil atau ramping.
+        </div>
+    </section>
+
+    <!-- STEP 10: PAIR PLOT -->
+    <section class="section-card">
+        <h2 class="text-3xl mb-4 font-serif">10. Analisis Korelasi Silang (Pair Plot)</h2>
+        <div class="accent-line"></div>
+        <div class="image-upload-wrapper">
+            <input type="file" accept="image/*" onchange="previewImage(event, 'img-10')">
+            <div class="image-placeholder" onclick="this.previousElementSibling.click()">
+                <div class="placeholder-text">Klik untuk Unggah Grafik Pair Plot</div>
+                <img id="img-10" alt="">
+            </div>
+        </div>
+        <div class="insight-note">
+            Pair plot adalah ringkasan akhir yang menunjukkan hubungan setiap pasang variabel sekaligus. Grafik diagonal menunjukkan distribusi kepadatan tiap spesies, sementara sisa grafiknya menunjukkan bagaimana setiap spesies membentuk kelompok (cluster) yang terpisah. Ini membuktikan bahwa fitur fisik sangat efektif untuk membedakan satu jenis spesies ikan dengan yang lainnya.
+        </div>
+    </section>
+
+    <footer class="text-center py-10 text-slate-500 text-sm border-t border-white/5">
+        Laporan Presentasi Akhir EDA Biometrik Ikan • Kelompok 7 • © 2024
+    </footer>
+</div>
+
+<script>
+    function previewImage(event, imgId) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById(imgId);
+                const placeholderText = img.previousElementSibling;
+                
+                img.src = e.target.result;
+                img.style.display = 'block';
+                if (placeholderText) {
+                    placeholderText.style.display = 'none';
+                }
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+</body>
+</html>
